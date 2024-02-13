@@ -1,0 +1,17 @@
+@use "/src/styles/layout.scss" as *;
+
+$menu-color: rgb(74, 74, 255);
+
+.appBar {
+  background: none!important;
+  color: $menu-color!important;
+}
+
+.toolbar {
+  backdrop-filter: blur(6px);  
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+.accountCircle {
+  color: $menu-color!important;
+}

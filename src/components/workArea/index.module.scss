@@ -1,9 +1,9 @@
 @use "/src/styles/layout.scss" as *;
 
+$area-vertical-padding: calc($app-header-height + $large);
+
 .workArea {
-  margin-top: $app-header-height;
-  padding: $normal;
+  padding: $area-vertical-padding $normal;
   background-color: rgb(243, 243, 243);
-  // height: calc(100vh - #{$app-header-height} - #{$normal * 2});
-  // overflow: auto;
+  min-height: calc(100vh - $area-vertical-padding * 2);
 }
