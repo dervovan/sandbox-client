@@ -8,6 +8,7 @@ $menu-color: rgb(74, 74, 255);
 }
 
 .toolbar {
+  justify-content: space-between;
   backdrop-filter: blur(6px);  
   background-color: rgba(25, 118, 210, 0.08);
 }
