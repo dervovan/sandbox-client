@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Skeleton,
   Toolbar,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
@@ -19,6 +20,7 @@ type MenuItem = {
 
 type Props = {
   onClick?: Function;
+  isLoading: boolean;
 };
 
 const Header: React.FC<Props> = (props: Props) => {
@@ -27,11 +29,12 @@ const Header: React.FC<Props> = (props: Props) => {
     { label: "About", link: "/about" },
     { label: "Hello", link: "/hello" },
   ];
-
+  
   return (
     <AppBar position="fixed" className={styles.appBar}>
       <Toolbar className={styles.toolbar}>
-        <List sx={{ display: "flex" }}>
+        {props.isLoading && <Skeleton sx={{width: '50%', height: '40px'}}/>}
+        {!props.isLoading && <List sx={{ display: "flex" }}>
           <ListItem key={"Burger"}>
             <Draw />
           </ListItem>
@@ -47,7 +50,7 @@ const Header: React.FC<Props> = (props: Props) => {
               </ListItem>
             )
           })}
-        </List>
+        </List>}
         <Button className={styles.accountCircle}>
           <AccountCircleIcon/>
         </Button>

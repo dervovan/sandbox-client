@@ -29,23 +29,28 @@ axios.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response.status == 401) {
+    if (error?.response?.status === 401) {
       let { access_token } = await refreshToken();
       localStorage.setItem('access_token', access_token);
       axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
-      return api(error.config);
+      return api(error?.config);
     }
   }
 );
 
-const get = (url: string) => {
-  return axios.get(url);
+const get = async (url: string) => {
+  const result = await axios.get(url);
+  return result?.data
 };
-const post = (params: IPostParams) => {
-  return axios.post(params.url, params.data);
+
+const post = async (params: IPostParams) => {
+  const result = await axios.post(params.url, params.data);
+  return result?.data
 };
-const del = (url: string) => {
-  return axios.delete(url);
+
+const del = async (url: string) => {
+  const result = await axios.delete(url);
+  return result?.data
 };
 
 export default {
