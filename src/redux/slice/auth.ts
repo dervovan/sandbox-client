@@ -6,7 +6,7 @@ export type Role = "ADMIN" | "USER" | '';
 export interface IUser {
   login: string;
   email: string;
-  roles: Role;
+  roles: Role[];
 }
 
 export interface IAuthState {
@@ -19,7 +19,7 @@ const initialState: IAuthState = {
   userData: {
     login: '',
     email: '',
-    roles: ''
+    roles: []
   }
 };
 
@@ -28,12 +28,10 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<IUser>) => {
-      if (action.payload.login) {
+      if (action.payload?.login) {
         state.userData = action.payload;
         state.isAuthorized = true;
       } 
-      state.isAuthorized = true;
-      state.userData = action.payload
     },
     logout: (state) => {
       state.isAuthorized = false;
