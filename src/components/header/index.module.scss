@@ -16,3 +16,9 @@ $menu-color: rgb(74, 74, 255);
 .accountCircle {
   color: $menu-color!important;
 }
+
+.menuItem {
+  :global .active {
+    background-color: rgba(25, 118, 210, 0.08);
+  }
+}
