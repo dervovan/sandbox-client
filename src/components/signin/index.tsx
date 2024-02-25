@@ -1,18 +1,28 @@
 import { useForm, FormProvider } from "react-hook-form";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { FormInput } from "../formComponents/input";
+import { LoadingButton } from "@mui/lab";
+import { login } from "../../redux/slice/auth";
+import { IAuthResponse } from "../../api/types";
+import { useMutation } from "@tanstack/react-query";
+import { useAppDispatch } from "../../redux/hooks";
+import useApi from "../../api/useApi";
+import api, { SUGNIN_URL } from "../../api";
 
 interface FormData {
-  firstName: string;
-  lastName: string;
   email: string;
   password: string;
-  confirmPassword: string;
-  acceptTerms: boolean;
 }
 
 const Signin = () => {
-  const methods = useForm<FormData>();
+  const dispatch = useAppDispatch();
+  const { post } = useApi();
+  const methods = useForm<FormData>({
+    defaultValues: {
+      email: "testmyauth@yopmail.com",
+      password: "qwe",
+    },
+  });
   const {
     handleSubmit,
     formState,
@@ -24,8 +34,30 @@ const Signin = () => {
   } = methods;
   const { errors } = formState;
 
+  const signup = async (data: FormData): Promise<IAuthResponse> => {
+    const response = await post<IAuthResponse>(SUGNIN_URL, data);
+
+    return response;
+  };
+
+  const { mutate, isPending, error } = useMutation<
+    IAuthResponse,
+    any,
+    FormData
+  >({
+    mutationFn: signup,
+    onSuccess: (data: IAuthResponse) => {
+      data?.email && dispatch(login(data))
+    },
+  });
+
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    mutate(data)
+  };
+  const handleRefresh = async () => {
+    const response = await api.post<IAuthResponse>({url:`/auth/refresh`});
+
+    return response;
   };
 
   // const password = watch("password");
@@ -50,7 +82,7 @@ const Signin = () => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <FormInput
-                name="Email"
+                name="email"
                 control={control}
                 label="Email *"
                 rules={{
@@ -81,17 +113,30 @@ const Signin = () => {
               />
             </Grid>
             <Grid item xs={12} mt={"40px"}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                Войти
-              </Button>
+            <LoadingButton
+              loading={isPending}
+              loadingPosition="start"
+              variant="contained"
+              color="primary"
+              fullWidth
+              type="submit"
+            >
+              Войти
+            </LoadingButton>
             </Grid>
+
           </Grid>
         </form>
+            <LoadingButton
+              loading={isPending}
+              loadingPosition="start"
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={() => handleRefresh()}
+            >
+              Обновить
+            </LoadingButton>
       </FormProvider>
     </Paper>
   );

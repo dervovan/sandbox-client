@@ -12,6 +12,7 @@ export const FormInput = ({
   label,
   rules,
   type,
+  disabled,
   ...props
 }: FormInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,10 +38,11 @@ export const FormInput = ({
           helperText={error ? error.message : null}
           // size="small"
           error={!!error}
+          disabled={disabled}
           fullWidth
           label={label}
           InputProps={{
-            endAdornment: (
+            endAdornment: !disabled && (
               <InputAdornment position="end">
                 {type === "password" ? (
                   <IconButton
@@ -53,7 +55,7 @@ export const FormInput = ({
                   </IconButton>
                 ) : null}
                 <IconButton
-                  style={{ opacity: 0.7, margin: "0 4px" }}
+                  style={{ opacity: 0.8, margin: "0 4px" }}
                   aria-label="toggle password visibility"
                   onClick={() => onClear(field)}
                   edge="end"

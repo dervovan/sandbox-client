@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Button, Menu, MenuItem, Typography } from "@mui/material";
+import { Button, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styles from "./index.module.scss";
 import { IAuthState, IUser } from "../../redux/slice/auth";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import LoginIcon from '@mui/icons-material/Login';
 
 interface ProfileMenuProps {
   profileData: IAuthState;
@@ -46,6 +48,9 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
                   setMenuButton(null);
                 }}
               >
+                <ListItemIcon>
+                  <LoginIcon fontSize="small" />
+                </ListItemIcon>
                 Вход
               </MenuItem>,
               <MenuItem
@@ -54,6 +59,9 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
                   setMenuButton(null);
                 }}
               >
+                <ListItemIcon>
+                  <AppRegistrationIcon fontSize="small" />
+                </ListItemIcon>
                 Регистрация
               </MenuItem>,
             ]}

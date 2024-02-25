@@ -2,8 +2,12 @@ import { useForm } from "react-hook-form";
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { FormInput } from "../formComponents/input";
 import useApi from "../../api/useApi";
-import { IRefreshTokenResponse } from "../../api/types";
+import { IAuthResponse, IRefreshTokenResponse } from "../../api/types";
 import { useMutation } from "@tanstack/react-query";
+import { LoadingButton } from "@mui/lab";
+import { useAppDispatch } from "../../redux/hooks";
+import { login } from "../../redux/slice/auth";
+import { SUGNUP_URL } from "../../api";
 
 interface FormData {
   firstName: string;
@@ -14,7 +18,15 @@ interface FormData {
 }
 
 const Signup = () => {
-  const methods = useForm<FormData>();
+  const dispatch = useAppDispatch();
+  const methods = useForm<FormData>({
+    defaultValues: {
+      firstName: "qwe",
+      email: "testmyauth@yopmail.com",
+      password: "qwe",
+      confirmPassword: "qwe",
+    },
+  });
   const { post } = useApi();
   const {
     handleSubmit,
@@ -27,27 +39,24 @@ const Signup = () => {
   } = methods;
   // const { errors } = formState;
 
-  const signup = async ({
-    email,
-    password,
-  }: FormData): Promise<IRefreshTokenResponse> => {
-    const response = await post<IRefreshTokenResponse>(`/auth/signup`, {
-      email: email,
-      password: password,
-    });
+  const signup = async (data: FormData): Promise<IAuthResponse> => {
+    const response = await post<IAuthResponse>(SUGNUP_URL, data);
 
     return response;
   };
 
   const { mutate, isPending, error } = useMutation<
-    IRefreshTokenResponse,
+    IAuthResponse,
     any,
     FormData
   >({
     mutationFn: signup,
+    onSuccess: (data: IAuthResponse) => {
+      data?.email && dispatch(login(data))
+    },
   });
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+
+  const onSubmit = async (data: FormData) => {
     mutate(data);
   };
 
@@ -60,7 +69,6 @@ const Signup = () => {
         margin: "10px 200px",
       }}
     >
-      {isPending && "isPending"}
       <Typography
         variant="h4"
         style={{ textAlign: "center", paddingBottom: "40px" }}
@@ -78,6 +86,7 @@ const Signup = () => {
                 required: "Обязательно для заполнения",
                 minLength: { value: 2, message: "Минимум 2 символа" },
               }}
+              disabled={isPending}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -88,6 +97,7 @@ const Signup = () => {
               rules={{
                 minLength: { value: 2, message: "Минимум 2 символа" },
               }}
+              disabled={isPending}
             />
           </Grid>
           <Grid item xs={12}>
@@ -103,6 +113,7 @@ const Signup = () => {
                 },
               }}
               autoComplete="nope"
+              disabled={isPending}
             />
           </Grid>
           <Grid item xs={12}>
@@ -112,15 +123,16 @@ const Signup = () => {
               label="Пароль *"
               rules={{
                 required: "Обязательно для заполнения",
-                pattern: {
-                  value:
-                    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$/,
-                  message:
-                    "Пароль должен содержать 8 символов: латинские буквы верхнего и нижнего регистра и арабские цифры",
-                },
+                // pattern: {
+                //   value:
+                //     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$/,
+                //   message:
+                //     "Пароль должен содержать 8 символов: латинские буквы верхнего и нижнего регистра и арабские цифры",
+                // },
               }}
               type="password"
               autoComplete="new-password"
+              disabled={isPending}
             />
           </Grid>
           <Grid item xs={12}>
@@ -138,12 +150,20 @@ const Signup = () => {
               }}
               type="password"
               autoComplete="new-password"
+              disabled={isPending}
             />
           </Grid>
           <Grid item xs={12} mt={"40px"}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <LoadingButton
+              loading={isPending}
+              // loadingPosition="start"
+              variant="contained"
+              // color="primary"
+              fullWidth
+              type="submit"
+            >
               Зарегистрироваться
-            </Button>
+            </LoadingButton>
           </Grid>
         </Grid>
       </form>

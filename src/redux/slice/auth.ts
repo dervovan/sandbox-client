@@ -4,7 +4,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export type Role = "ADMIN" | "USER" | '';
 
 export interface IUser {
-  login: string;
   email: string;
   roles: Role[];
 }
@@ -17,7 +16,6 @@ export interface IAuthState {
 const initialState: IAuthState = {
   isAuthorized: false,
   userData: {
-    login: '',
     email: '',
     roles: []
   }
@@ -28,7 +26,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<IUser>) => {
-      if (action.payload?.login) {
+      if (action.payload?.email) {
         state.userData = action.payload;
         state.isAuthorized = true;
       } 
