@@ -3,6 +3,8 @@ import { IPostParams, IRefreshTokenResponse } from "./types";
 
 const BASE_URL = "http://localhost:5000";
 const refreshTokensUrl = "/auth/refresh";
+export const SUGNIN_URL = "/auth/signin";
+export const SUGNUP_URL = "/auth/signup";
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -25,6 +27,12 @@ api.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
 
 api.interceptors.response.use(
   (response) => {
+    if ([SUGNIN_URL, SUGNUP_URL].includes(response?.config?.url || "")) {
+      localStorage.setItem("access_token", response?.data?.access_token);
+      api.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response?.data?.access_token}`;
+    }
     return response;
   },
   async (error) => {
@@ -34,11 +42,10 @@ api.interceptors.response.use(
       !error.config._retry
     ) {
       error.config._retry = true;
-      const { data } = await api.post<IRefreshTokenResponse>(refreshTokensUrl);
-      if (data?.access_token) {
-        localStorage.setItem("access_token", data.access_token);
-        api.defaults.headers.common["Authorization"] =
-          "Bearer " + data.access_token;
+      const { data } = await api.post<string>(refreshTokensUrl);
+      if (data) {
+        localStorage.setItem("access_token", data);
+        api.defaults.headers.common["Authorization"] = "Bearer " + data;
         return api.request(error.config);
       }
     }

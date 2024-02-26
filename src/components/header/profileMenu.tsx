@@ -3,10 +3,11 @@ import { Button, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styles from "./index.module.scss";
 import { IAuthState, IUser } from "../../redux/slice/auth";
-import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 interface ProfileMenuProps {
   profileData: IAuthState;
@@ -34,10 +35,28 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
       >
         {isAuthorized
           ? [
-              <MenuItem key="profile" LinkComponent={NavLink} href="/profile">
+              <MenuItem
+                key="profile"
+                onClick={() => {
+                  navigate("/profile");
+                  setMenuButton(null);
+                }}
+              >
+                <ListItemIcon>
+                  <ManageAccountsIcon fontSize="medium" />
+                </ListItemIcon>
                 Профиль
               </MenuItem>,
-              <MenuItem key="exit" LinkComponent={NavLink} href="/">
+              <MenuItem
+                key="exit"
+                onClick={() => {
+                  navigate("/");
+                  setMenuButton(null);
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon fontSize="medium" />
+                </ListItemIcon>
                 Выйти
               </MenuItem>,
             ]
@@ -49,7 +68,7 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
                 }}
               >
                 <ListItemIcon>
-                  <LoginIcon fontSize="small" />
+                  <LoginIcon fontSize="medium" />
                 </ListItemIcon>
                 Вход
               </MenuItem>,
@@ -60,7 +79,7 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
                 }}
               >
                 <ListItemIcon>
-                  <AppRegistrationIcon fontSize="small" />
+                  <AppRegistrationIcon fontSize="medium" />
                 </ListItemIcon>
                 Регистрация
               </MenuItem>,

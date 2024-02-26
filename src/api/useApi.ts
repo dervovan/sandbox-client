@@ -23,7 +23,7 @@ const useApi = () => {
     return data || (response?.data as T);
   };
 
-  const post = async <T>(url: string, postData: any) => {
+  const post = async <T>(url: string, postData?: any) => {
     const { data, response } = await api.post<T>({
       data: postData,
       url: url,
