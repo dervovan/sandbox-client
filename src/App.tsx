@@ -12,9 +12,7 @@ function App() {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const selectUser = (state: RootState) => state.auth;
-  const selectError = (state: RootState) => state.error;
   const userData = useAppSelector(selectUser);
-  const error = useAppSelector(selectError);
 
   const getCurrentUser = async (): Promise<IAuthResponse> => {
     const result = await api.get<IAuthResponse>("/users/me");
@@ -33,7 +31,6 @@ function App() {
     <>
       {isLoading && <FullScreenLoader />}
       <AppHeader isLoading={isLoading} profileData={userData} />
-      {JSON.stringify(error)}
       <WorkArea />
     </>
   );

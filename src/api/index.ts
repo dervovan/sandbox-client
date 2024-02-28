@@ -46,6 +46,7 @@ api.interceptors.response.use(
       if (data) {
         localStorage.setItem("access_token", data);
         api.defaults.headers.common["Authorization"] = "Bearer " + data;
+        error.config.headers["Authorization"] = "Bearer " + data;
         return api.request(error.config);
       }
     }

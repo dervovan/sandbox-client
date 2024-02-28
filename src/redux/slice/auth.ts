@@ -4,8 +4,10 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export type Role = "ADMIN" | "USER" | '';
 
 export interface IUser {
+  firstName: string,
+  lastName: string,
   email: string;
-  roles: Role[];
+  role: Role[];
 }
 
 export interface IAuthState {
@@ -17,7 +19,9 @@ const initialState: IAuthState = {
   isAuthorized: false,
   userData: {
     email: '',
-    roles: []
+    firstName: '',
+    lastName: '',
+    role: []
   }
 };
 

@@ -7,7 +7,9 @@ import { IAuthResponse } from "../../api/types";
 import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch } from "../../redux/hooks";
 import useApi from "../../api/useApi";
-import api, { SUGNIN_URL } from "../../api";
+import { SUGNIN_URL } from "../../api";
+import { useNavigate } from "react-router-dom";
+import LoginIcon from '@mui/icons-material/Login';
 
 interface FormData {
   email: string;
@@ -16,6 +18,7 @@ interface FormData {
 
 const Signin = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { post } = useApi();
   const methods = useForm<FormData>({
     defaultValues: {
@@ -34,7 +37,7 @@ const Signin = () => {
   } = methods;
   const { errors } = formState;
 
-  const signup = async (data: FormData): Promise<IAuthResponse> => {
+  const signin = async (data: FormData): Promise<IAuthResponse> => {
     const response = await post<IAuthResponse>(SUGNIN_URL, data);
 
     return response;
@@ -45,22 +48,18 @@ const Signin = () => {
     any,
     FormData
   >({
-    mutationFn: signup,
+    mutationFn: signin,
     onSuccess: (data: IAuthResponse) => {
-      data?.email && dispatch(login(data))
+      if (data?.email) {
+        dispatch(login(data));
+        navigate("/");
+      }
     },
   });
 
   const onSubmit = (data: FormData) => {
-    mutate(data)
+    mutate(data);
   };
-  const handleRefresh = async () => {
-    const response = await api.post<IAuthResponse>({url:`/auth/refresh`});
-
-    return response;
-  };
-
-  // const password = watch("password");
 
   return (
     <Paper
@@ -92,6 +91,7 @@ const Signin = () => {
                     message: "Неверный формат почты",
                   },
                 }}
+                disabled={isPending}
               />
             </Grid>
             <Grid item xs={12}>
@@ -101,42 +101,27 @@ const Signin = () => {
                 label="Пароль *"
                 rules={{
                   required: "Обязательно для заполнения",
-                  // pattern: {
-                  //   value:
-                  //     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$/,
-                  //   message:
-                  //     "Пароль должен содержать 8 символов: латинские буквы верхнего и нижнего регистра и арабские цифры",
-                  // },
                 }}
                 type="password"
                 autoComplete="new-password"
+                disabled={isPending}
               />
             </Grid>
             <Grid item xs={12} mt={"40px"}>
-            <LoadingButton
-              loading={isPending}
-              loadingPosition="start"
-              variant="contained"
-              color="primary"
-              fullWidth
-              type="submit"
-            >
-              Войти
-            </LoadingButton>
+              <LoadingButton
+                loading={isPending}
+                loadingPosition="start"
+                startIcon={<LoginIcon />}
+                variant="contained"
+                color="primary"
+                fullWidth
+                type="submit"
+              >
+                Войти
+              </LoadingButton>
             </Grid>
-
           </Grid>
         </form>
-            <LoadingButton
-              loading={isPending}
-              loadingPosition="start"
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={() => handleRefresh()}
-            >
-              Обновить
-            </LoadingButton>
       </FormProvider>
     </Paper>
   );

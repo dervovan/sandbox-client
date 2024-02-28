@@ -10,6 +10,9 @@ export interface IRefreshTokenResponse {
   refresh_token: string;
 }
 export interface IAuthResponse extends IRefreshTokenResponse {
+  id: number,
+  firstName: string,
+  lastName: string,
   email: string;
-  roles: Role[];
+  role: Role[];
 }

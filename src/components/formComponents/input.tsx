@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import { FormInputProps } from "./types";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Close, Visibility, VisibilityOff } from "@mui/icons-material";
-import { ReactHTMLElement, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export const FormInput = ({
   name,

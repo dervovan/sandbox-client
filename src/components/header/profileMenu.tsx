@@ -1,13 +1,23 @@
 import { useState } from "react";
-import { Button, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Button,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styles from "./index.module.scss";
 import { IAuthState, IUser } from "../../redux/slice/auth";
 import { useNavigate } from "react-router-dom";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
-import LoginIcon from '@mui/icons-material/Login';
-import LogoutIcon from '@mui/icons-material/Logout';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useMutation } from "@tanstack/react-query";
+import useApi from "../../api/useApi";
+import { logout } from "../../redux/slice/auth";
+import { useAppDispatch } from "../../redux/hooks";
 
 interface ProfileMenuProps {
   profileData: IAuthState;
@@ -15,9 +25,30 @@ interface ProfileMenuProps {
 }
 
 const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
+  const navigate = useNavigate();
+  const { post } = useApi();
+  const dispatch = useAppDispatch();
   const { isAuthorized, userData } = profileData || {};
   const [menuButton, setMenuButton] = useState<HTMLElement | null>(null);
-  const navigate = useNavigate();
+
+  const onLogout = async () => {
+    const response = await post<any>("/auth/logout");
+
+    return response;
+  };
+
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: onLogout,
+    onSuccess: () => {
+      dispatch(logout());
+    },
+  });
+
+  const handleQuit = () => {
+    mutate()
+    navigate("/signin");
+    setMenuButton(null);
+  };
 
   return (
     <>
@@ -47,13 +78,7 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
                 </ListItemIcon>
                 Профиль
               </MenuItem>,
-              <MenuItem
-                key="exit"
-                onClick={() => {
-                  navigate("/");
-                  setMenuButton(null);
-                }}
-              >
+              <MenuItem key="exit" onClick={handleQuit}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="medium" />
                 </ListItemIcon>
@@ -62,6 +87,7 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
             ]
           : [
               <MenuItem
+                key="signin"
                 onClick={() => {
                   navigate("/signin");
                   setMenuButton(null);
@@ -73,6 +99,7 @@ const ProfileMenu = ({ profileData, disabled }: ProfileMenuProps) => {
                 Вход
               </MenuItem>,
               <MenuItem
+                key="signup"
                 onClick={() => {
                   navigate("/signup");
                   setMenuButton(null);

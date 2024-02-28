@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { FormInput } from "../formComponents/input";
 import useApi from "../../api/useApi";
 import { IAuthResponse, IRefreshTokenResponse } from "../../api/types";
