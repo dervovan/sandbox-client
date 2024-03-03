@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export type Role = "ADMIN" | "USER" | '';
 
@@ -12,11 +13,13 @@ export interface IUser {
 
 export interface IAuthState {
   isAuthorized: boolean;
+  isFetched: boolean;
   userData: IUser | null;
 }
 
 const initialState: IAuthState = {
   isAuthorized: false,
+  isFetched: false,
   userData: {
     email: '',
     firstName: '',
@@ -30,6 +33,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<IUser>) => {
+      state.isFetched = true
       if (action.payload?.email) {
         state.userData = action.payload;
         state.isAuthorized = true;
@@ -43,5 +47,7 @@ export const authSlice = createSlice({
 });
 
 export const { login, logout } = authSlice.actions;
+
+export const selectUser = (state: RootState) => state.auth;
 
 export default authSlice.reducer;

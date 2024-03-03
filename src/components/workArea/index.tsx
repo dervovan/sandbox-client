@@ -5,17 +5,38 @@ import Signup from "../signup";
 import Signin from "../signin";
 import NotFoundPage from "../../pages/errorPages/notFound";
 import Profile from "../../pages/profile";
+import AccountActivationConfirmation from "../../pages/pleaseActivate";
+import ProtectedRoute from "./protectedRoute";
+import { IAuthState } from "../../redux/slice/auth";
 
-export default function WorkArea() {
+const WorkArea: React.FC<{authData:IAuthState}> = ({authData}: {authData:IAuthState}) => {
+
   return (
     <div className={styles.workArea}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute auth={authData}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pleaseActivate"
+          element={
+            <ProtectedRoute auth={authData}>
+              <AccountActivationConfirmation />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );
 }
+
+export default WorkArea

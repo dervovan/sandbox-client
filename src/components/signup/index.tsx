@@ -8,6 +8,7 @@ import { LoadingButton } from "@mui/lab";
 import { useAppDispatch } from "../../redux/hooks";
 import { login } from "../../redux/slice/auth";
 import { SUGNUP_URL } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   firstName: string;
@@ -19,12 +20,13 @@ interface FormData {
 
 const Signup = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const methods = useForm<FormData>({
     defaultValues: {
       firstName: "qwe",
       email: "testmyauth@yopmail.com",
-      password: "qwe",
-      confirmPassword: "qwe",
+      password: "Qqwe1234",
+      confirmPassword: "Qqwe1234",
     },
   });
   const { post } = useApi();
@@ -53,6 +55,7 @@ const Signup = () => {
     mutationFn: signup,
     onSuccess: (data: IAuthResponse) => {
       data?.email && dispatch(login(data))
+      navigate("/pleaseActivate");
     },
   });
 
@@ -123,12 +126,12 @@ const Signup = () => {
               label="Пароль *"
               rules={{
                 required: "Обязательно для заполнения",
-                // pattern: {
-                //   value:
-                //     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$/,
-                //   message:
-                //     "Пароль должен содержать 8 символов: латинские буквы верхнего и нижнего регистра и арабские цифры",
-                // },
+                pattern: {
+                  value:
+                    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$/,
+                  message:
+                    "Пароль должен содержать 8 символов: латинские буквы верхнего и нижнего регистра и арабские цифры",
+                },
               }}
               type="password"
               autoComplete="new-password"

@@ -1,7 +1,7 @@
 import WorkArea from "./components/workArea";
 import AppHeader from "./components/header";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { IUser, login } from "./redux/slice/auth";
+import { IUser, login, selectUser } from "./redux/slice/auth";
 import FullScreenLoader from "./components/uikit/loader/fullscreen";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { RootState } from "./redux/store";
@@ -11,7 +11,6 @@ import { IAuthResponse } from "./api/types";
 function App() {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const selectUser = (state: RootState) => state.auth;
   const userData = useAppSelector(selectUser);
 
   const getCurrentUser = async (): Promise<IAuthResponse> => {
@@ -31,7 +30,7 @@ function App() {
     <>
       {isLoading && <FullScreenLoader />}
       <AppHeader isLoading={isLoading} profileData={userData} />
-      <WorkArea />
+      <WorkArea authData={userData} />
     </>
   );
 }

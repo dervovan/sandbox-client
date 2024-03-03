@@ -23,7 +23,7 @@ const Signin = () => {
   const methods = useForm<FormData>({
     defaultValues: {
       email: "testmyauth@yopmail.com",
-      password: "qwe",
+      password: "Qqwe1234",
     },
   });
   const {

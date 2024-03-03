@@ -5,6 +5,7 @@ const BASE_URL = "http://localhost:5000";
 const refreshTokensUrl = "/auth/refresh";
 export const SUGNIN_URL = "/auth/signin";
 export const SUGNUP_URL = "/auth/signup";
+export const LOGOUT_URL = "/auth/logout";
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -32,6 +33,10 @@ api.interceptors.response.use(
       api.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response?.data?.access_token}`;
+    }
+    if ([LOGOUT_URL].includes(response?.config?.url || "")) {
+      localStorage.removeItem("access_token");
+      api.defaults.headers.common["Authorization"] = ``;
     }
     return response;
   },
