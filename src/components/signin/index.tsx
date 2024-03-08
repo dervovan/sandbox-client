@@ -9,7 +9,8 @@ import { useAppDispatch } from "../../redux/hooks";
 import useApi from "../../api/useApi";
 import { SUGNIN_URL } from "../../api";
 import { useNavigate } from "react-router-dom";
-import LoginIcon from '@mui/icons-material/Login';
+import LoginIcon from "@mui/icons-material/Login";
+import styles from "./index.module.scss";
 
 interface FormData {
   email: string;
@@ -62,14 +63,7 @@ const Signin = () => {
   };
 
   return (
-    <Paper
-      style={{
-        display: "grid",
-        gridRowGap: "20px",
-        padding: "20px",
-        margin: "10px 200px",
-      }}
-    >
+    <Paper className={styles.container}>
       <Typography
         variant="h4"
         style={{ textAlign: "center", paddingBottom: "40px" }}

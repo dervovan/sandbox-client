@@ -1,28 +1,14 @@
-import { Box, CircularProgress, Container, Portal } from "@mui/material";
+import { CircularProgress, Portal } from "@mui/material";
+import styles from "./fullscreen.module.scss";
 
 const FullScreenLoader = () => {
   return (
     <Portal container={() => document.getElementById("root")}>
-      <Container
-        sx={{
-          height: "100vh",
-          position: "absolute",
-          top: 0,
-          left: "auto",
-          backgroundColor: "rgb(243, 243, 243, 0.2)",
-          zIndex: 1000,
-          backdropFilter: "blur(5px)",
-        }}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-        >
+      <div className={styles.container}>
+        <div className={styles.loader}>
           <CircularProgress />
-        </Box>
-      </Container>
+        </div>
+      </div>
     </Portal>
   );
 };

@@ -1,0 +1,7 @@
+@use "/src/styles/layout.scss" as *;
+
+.container {
+  margin-inline: auto;
+  width: max($large * 20, 30vw);
+  padding: $large;
+}

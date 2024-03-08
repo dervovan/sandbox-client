@@ -1,0 +1,19 @@
+@use "/src/styles/layout.scss" as *;
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: auto;
+  background-color: rgb(243, 243, 243, 0.2);
+  z-index: $loader;
+  backdrop-filter: blur(5px);
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
