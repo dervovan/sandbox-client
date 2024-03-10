@@ -1,0 +1,25 @@
+@use "/src/styles/layout.scss" as *;
+
+.container {
+  margin-inline: auto;
+  width: min($large * 50, 90vw);
+  min-height: 70vh;
+  padding: $large;
+}
+
+.board {
+  width: 420px;
+  height: 420px;
+}
+
+.cell {
+  width: 7px;
+  height: 7px;
+  fill: white;
+  stroke-width: 0.1;
+  stroke: black;
+}
+
+.alive {
+  fill: gray;
+}

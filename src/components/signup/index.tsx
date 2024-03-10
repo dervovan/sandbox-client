@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { login } from "../../redux/slice/auth";
 import { SUGNUP_URL } from "../../api";
 import { useNavigate } from "react-router-dom";
+import styles from "./index.module.scss";
 
 interface FormData {
   firstName: string;
@@ -54,7 +55,7 @@ const Signup = () => {
   >({
     mutationFn: signup,
     onSuccess: (data: IAuthResponse) => {
-      data?.email && dispatch(login(data))
+      data?.email && dispatch(login(data));
       navigate("/pleaseActivate");
     },
   });
@@ -64,14 +65,7 @@ const Signup = () => {
   };
 
   return (
-    <Paper
-      style={{
-        display: "grid",
-        gridRowGap: "20px",
-        padding: "20px",
-        margin: "10px 200px",
-      }}
-    >
+    <Paper className={styles.container}>
       <Typography
         variant="h4"
         style={{ textAlign: "center", paddingBottom: "40px" }}

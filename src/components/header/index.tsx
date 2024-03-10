@@ -30,7 +30,7 @@ const Header: React.FC<Props> = (props: Props) => {
   const menuItems: MenuItem[] = [
     { label: "Home", link: "/" },
     { label: "About", link: "/about" },
-    { label: "Hello", link: "/pleaseActivate" },
+    { label: "GOL", link: "/gol" },
   ];
 
   return (

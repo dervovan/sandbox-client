@@ -8,6 +8,7 @@ import Profile from "../../pages/profile";
 import AccountActivationConfirmation from "../../pages/pleaseActivate";
 import ProtectedRoute from "./protectedRoute";
 import { IAuthState } from "../../redux/slice/auth";
+import Gol from "../gol";
 
 const WorkArea: React.FC<{authData:IAuthState}> = ({authData}: {authData:IAuthState}) => {
 
@@ -15,6 +16,7 @@ const WorkArea: React.FC<{authData:IAuthState}> = ({authData}: {authData:IAuthSt
     <div className={styles.workArea}>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/gol" element={<Gol/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route
