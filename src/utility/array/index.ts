@@ -1,3 +1,5 @@
+import { CellState } from "../../components/gol/types";
+
 export const safeUpdate = (
   arr: Array<unknown>,
   index: number,
@@ -11,3 +13,7 @@ export const safeUpdate = (
 
   return arr;
 };
+
+export const mergeStates = (arr1: CellState[], arr2: CellState[]) => {
+  return arr1.map((el, i) => el | arr2[i]);
+}

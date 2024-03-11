@@ -1,6 +1,6 @@
-export type CellState = 1 | 0;
+import { CellState, Board } from "./types";
 
-export function applyGOLRules(dataField: Array<Array<CellState>>) {
+export function applyGOLRules(dataField: Board) {
   let processed = [];
   for (let i = 0; i < dataField.length; i++) {
     processed.push(

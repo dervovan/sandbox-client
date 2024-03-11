@@ -16,16 +16,6 @@ api.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
   "access_token"
 )}`;
 
-// axios.interceptors.request.use(
-//   config => {
-//     config.headers['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
-//         return config;
-//     },
-//     error => {
-//         return Promise.reject(error);
-//     }
-// );
-
 api.interceptors.response.use(
   (response) => {
     if ([SUGNIN_URL, SUGNUP_URL].includes(response?.config?.url || "")) {

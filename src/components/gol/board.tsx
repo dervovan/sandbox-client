@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import styles from "./index.module.scss";
 import Row from "./row";
-import { CellState } from "./golLogic";
+import { CellState } from "./types";
 import Cell from "./cell";
 import { Fragment } from "react";
 
