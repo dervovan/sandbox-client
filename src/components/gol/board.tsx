@@ -7,7 +7,8 @@ import { Fragment } from "react";
 
 type Props = {
   data: Array<Array<CellState>>;
-  onMouseOver: onMouseOver;
+  onMouseOver: onMouseOver | null;
+  onMouseClick: onMouseOver | null;
 };
 
 export type onMouseOver = ({
@@ -18,7 +19,7 @@ export type onMouseOver = ({
   cellIndex: number;
 }) => void;
 
-const Board: React.FC<Props> = ({ data, onMouseOver }) => {
+const Board: React.FC<Props> = ({ data, onMouseOver, onMouseClick }) => {
   return (
     <svg className={styles.board}>
       {data.map((row, index) => {
@@ -43,6 +44,7 @@ const Board: React.FC<Props> = ({ data, onMouseOver }) => {
             data={row}
             rowIndex={index}
             onMouseOver={onMouseOver}
+            onMouseClick={onMouseClick}
           />
         );
       })}

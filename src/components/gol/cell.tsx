@@ -9,22 +9,36 @@ type Props = {
   isAlive: number;
   rowIndex: number;
   cellIndex: number;
-  onMouseOver: onMouseOver
+  onMouseOver: onMouseOver | null;
+  onMouseClick: onMouseOver | null;
 };
 
-const Cell: React.FC<Props> = ({ isAlive, rowIndex, cellIndex, onMouseOver }) => {
+const Cell: React.FC<Props> = ({
+  isAlive,
+  rowIndex,
+  cellIndex,
+  onMouseOver,
+  onMouseClick,
+}) => {
+  const mouseOver = (e: React.MouseEvent) => {
+    e.buttons === 1 && onMouseOver?.({ rowIndex, cellIndex });
+  };
 
-  const mouseOver = () => {
-    onMouseOver?.({rowIndex, cellIndex})
-  }
+  const mouseClick = () => {
+    if (onMouseOver) {
+      onMouseOver({ rowIndex, cellIndex });
+      return;
+    }
+    onMouseClick?.({ rowIndex, cellIndex });
+  };
 
   return (
     <rect
       className={clsx(styles.cell, isAlive && styles.alive)}
       x={cellIndex * SQUARE_SIZE}
       y={rowIndex * SQUARE_SIZE}
-      // onMouseEnter={mouseOver}
-      onClick={mouseOver}
+      onMouseEnter={mouseOver}
+      onClick={mouseClick}
     ></rect>
   );
 };

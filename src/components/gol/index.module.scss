@@ -1,5 +1,7 @@
 @use "/src/styles/layout.scss" as *;
 
+$boardSize: 490px;
+
 .container {
   margin-inline: auto;
   width: min($large * 50, 90vw);
@@ -7,9 +9,16 @@
   padding: $large;
 }
 
+.boardArea {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: $boardSize auto;
+  gap: $large;
+}
+
 .board {
-  width: 420px;
-  height: 420px;
+  width: $boardSize;
+  height: $boardSize;
 }
 
 .cell {

@@ -6,10 +6,16 @@ import { CellState } from "./types";
 type Props = {
   data: Array<CellState>;
   rowIndex: number;
-  onMouseOver: onMouseOver;
+  onMouseOver: onMouseOver | null;
+  onMouseClick: onMouseOver | null;
 };
 
-const Row: React.FC<Props> = ({ data, rowIndex, onMouseOver }) => {
+const Row: React.FC<Props> = ({
+  data,
+  rowIndex,
+  onMouseOver,
+  onMouseClick,
+}) => {
   return (
     <>
       {data.map((i, cellIndex) => {
@@ -20,6 +26,7 @@ const Row: React.FC<Props> = ({ data, rowIndex, onMouseOver }) => {
             rowIndex={rowIndex}
             cellIndex={cellIndex}
             onMouseOver={onMouseOver}
+            onMouseClick={onMouseClick}
           />
         );
       })}

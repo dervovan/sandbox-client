@@ -1,4 +1,4 @@
-import { CellState, Board } from "./types";
+import { CellState, Board } from "../types";
 
 export function applyGOLRules(dataField: Board) {
   let processed = [];
