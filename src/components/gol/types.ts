@@ -15,3 +15,11 @@ export type RippleTicResult = {
   board: Board;
   isFinished: boolean;
 };
+
+
+export enum FigureType {
+  Copperhead = 1,
+  GliderGun = 2,
+  SnarkLoop = 3,
+  Lines = 4
+}

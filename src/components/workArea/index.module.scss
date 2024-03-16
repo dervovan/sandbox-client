@@ -6,4 +6,5 @@ $area-vertical-padding: calc($app-header-height + $large);
   padding: $area-vertical-padding $normal;
   background-color: rgb(243, 243, 243);
   min-height: calc(100vh - $area-vertical-padding * 2);
+  min-width: fit-content;
 }

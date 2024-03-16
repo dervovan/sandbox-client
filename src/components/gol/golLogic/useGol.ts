@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { onMouseOver } from "../board";
-import { Board, CellState } from "../types";
+import { Board, CellState, FigureType } from "../types";
 import { BOARD_SIZE } from "../ripple/rippleLogic";
 import { applyGOLRules } from "./golLogic";
+import downloadToFile from "../../../utility/file/download";
+import { Copperhead, GliderGun, SnarkLoop, Lines } from "./figures";
 
 export const dataInit: Board =
   (JSON.parse(localStorage.getItem("gol") || "null") as Array<
@@ -47,12 +49,42 @@ const useGol = () => {
     setIsRunning(false);
   };
 
+  const damp = () => {
+    downloadToFile(JSON.stringify(golBoard), `GOL${new Date().valueOf()}`)
+  }
+
+  const uploadFromFile = (data: string) => {
+    setGolBoard(JSON.parse(data) as Board)
+  }
+
+  const setFigure = (type: FigureType) => {
+    switch (type) {
+      case FigureType.Copperhead:
+        setGolBoard(Copperhead)
+        break;
+      case FigureType.GliderGun:
+        setGolBoard(GliderGun)
+        break;
+      case FigureType.SnarkLoop:
+        setGolBoard(SnarkLoop)
+        break;
+      case FigureType.Lines:
+        setGolBoard(Lines)
+        break;
+      default:
+        break;
+    }
+  }
+
   return {
     isRunning,
     toggleRun,
     golBoard,
     onMouseOver,
     resetGol,
+    damp,
+    uploadFromFile,
+    setFigure
   };
 };
 

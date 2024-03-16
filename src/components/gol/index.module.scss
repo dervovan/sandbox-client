@@ -7,6 +7,7 @@ $boardSize: 490px;
   width: min($large * 50, 90vw);
   min-height: 70vh;
   padding: $large;
+  min-width: 1000px;
 }
 
 .boardArea {

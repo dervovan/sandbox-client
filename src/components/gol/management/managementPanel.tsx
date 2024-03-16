@@ -3,8 +3,9 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import TabContent, { allyProps } from "../../uikit/tabs/tabContent";
 import { Dispatch, SetStateAction } from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import GolManagement from "./golManagement";
+import { FigureType } from "../types";
 
 interface TabPanelProps {
   activeTab: number;
@@ -12,6 +13,9 @@ interface TabPanelProps {
   onGolToggle: () => void;
   isGolRunning: boolean;
   resetGol: () => void;
+  damp: () => void;
+  uploadFromFile: (data: string) => void;
+  setFigure: (type: FigureType) => void
 }
 
 const ManagementPanel = ({
@@ -20,6 +24,9 @@ const ManagementPanel = ({
   onGolToggle,
   isGolRunning,
   resetGol,
+  damp,
+  uploadFromFile,
+  setFigure
 }: TabPanelProps) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -38,10 +45,17 @@ const ManagementPanel = ({
           onGolToggle={onGolToggle}
           isGolRunning={isGolRunning}
           resetGol={resetGol}
+          damp={damp}
+          uploadFromFile={uploadFromFile}
+          setFigure={setFigure}
         />
       </TabContent>
       <TabContent value={activeTab} index={1}>
-        Item Two
+        <Box paddingTop={2}>
+          <Typography variant="body1" component="span">
+            Просто медитируй, кликая по квадратикам
+          </Typography>
+        </Box>
       </TabContent>
     </div>
   );
