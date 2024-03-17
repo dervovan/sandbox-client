@@ -5,6 +5,7 @@ import { BOARD_SIZE } from "../ripple/rippleLogic";
 import { applyGOLRules } from "./golLogic";
 import downloadToFile from "../../../utility/file/download";
 import { Copperhead, GliderGun, SnarkLoop, Lines } from "./figures";
+import useToast from "../../uikit/toasts/useToast";
 
 export const dataInit: Board =
   (JSON.parse(localStorage.getItem("gol") || "null") as Array<
@@ -14,6 +15,7 @@ export const dataInit: Board =
 const useGol = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [golBoard, setGolBoard] = useState(dataInit);
+  const {addToast} = useToast()
 
   const toggleRun = () => {
     setIsRunning((prevState) => !prevState);
@@ -54,7 +56,11 @@ const useGol = () => {
   }
 
   const uploadFromFile = (data: string) => {
-    setGolBoard(JSON.parse(data) as Board)
+    try {
+      setGolBoard(JSON.parse(data) as Board)
+    } catch (error) {
+      addToast({message: `Что-то не так с файлом, попробуй другой`})
+    }
   }
 
   const setFigure = (type: FigureType) => {

@@ -27,7 +27,7 @@ const Gol = () => {
         <Link href={"https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"} target={"blank"}>
           wiki
         </Link>
-        . Размер поля - 4900 элементов. Хороший способ проверить возможности ReactJS.
+        . Размер поля почти 5 тысяч элементов. Хороший способ проверить возможности ReactJS.
       </Typography>
       <section className={styles.boardArea}>
         <Board

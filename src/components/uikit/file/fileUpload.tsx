@@ -21,6 +21,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function InputFileUpload({ disabled, onUpload }: Props) {
+
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e?.target?.files) {
       return;
@@ -39,6 +40,8 @@ export default function InputFileUpload({ disabled, onUpload }: Props) {
       reader.readAsText(file, "UTF-8");
     } catch (error) {
       console.error(error) 
+    } finally {
+      e.target.value = ''
     }
   };
 

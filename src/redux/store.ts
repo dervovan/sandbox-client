@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slice/auth";
 import errorReducer from "./slice/error";
+import ToastState from "./slice/toast";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    error: errorReducer
+    error: errorReducer,
+    toasts: ToastState
   },
 });
 
