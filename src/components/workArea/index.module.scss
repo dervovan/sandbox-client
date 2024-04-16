@@ -4,7 +4,8 @@ $area-vertical-padding: calc($app-header-height + $large);
 
 .workArea {
   padding: $area-vertical-padding $normal;
+  padding-bottom: $large;
   background-color: rgb(243, 243, 243);
-  min-height: calc(100vh - $area-vertical-padding * 2);
+  min-height: calc(100vh - $area-vertical-padding - $large);
   min-width: fit-content;
 }

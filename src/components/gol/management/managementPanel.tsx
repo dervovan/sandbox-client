@@ -3,7 +3,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import TabContent, { allyProps } from "../../uikit/tabs/tabContent";
 import { Dispatch, SetStateAction } from "react";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import GolManagement from "./golManagement";
 import { FigureType } from "../types";
 

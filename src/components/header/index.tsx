@@ -4,7 +4,6 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  MenuItem,
   Skeleton,
   Toolbar,
 } from "@mui/material";
@@ -12,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import Draw from "@mui/icons-material/Draw";
 import styles from "./index.module.scss";
 import ProfileMenu from "./profileMenu";
-import { IAuthState, IUser } from "../../redux/slice/auth";
+import { IAuthState } from "../../redux/slice/auth";
 
 type MenuItem = {
   label: string;
@@ -28,9 +27,9 @@ type Props = {
 const Header: React.FC<Props> = (props: Props) => {
   const {profileData, isLoading} = props
   const menuItems: MenuItem[] = [
-    { label: "Home", link: "/" },
-    { label: "About", link: "/about" },
+    { label: "Sorting", link: "/sorting" },
     { label: "GOL", link: "/gol" },
+    { label: "About", link: "/about" },
   ];
 
   return (

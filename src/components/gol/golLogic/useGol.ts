@@ -28,8 +28,8 @@ const useGol = () => {
 
     timeout = setTimeout(() => {
       setGolBoard(applyGOLRules(golBoard));
-    }, 50);
-
+    }, 30);
+    
     return () => {
       timeout && clearTimeout(timeout);
     };
