@@ -10,17 +10,36 @@ $boardSize: 490px;
   // min-width: 1000px;
 }
 
+.tabContent {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: min-content auto;
+}
+
 .column {
-  width: $atom * 3;
+  // width: $atom * 10;
   background-color: lightblue;
 }
 
 .sortingArea {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(250, 1fr);
   gap: 2px;
-  transform: scale(0.9);
+  transform: scale(0.95);
+  height: 400px;
+
+  &.center {
+    align-items: center;
+  }
+
+  &.top {
+    align-items: start;
+  }
+
+  &.bottom {
+    align-items: end;
+  }
 }
 
 .isComparing {
