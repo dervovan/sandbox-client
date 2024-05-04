@@ -1,31 +1,26 @@
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import styles from "./index.module.scss";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import TabContent, { allyProps } from "../../components/uikit/tabs/tabContent";
-import { ButtonGroup, Paper, Button, Typography } from "@mui/material";
+import TabContent, { a11yProps } from "../../components/uikit/tabs/tabContent";
+import { Paper, Typography } from "@mui/material";
 import { generateRandomData } from "./utility";
 import SortingContainer from "./sortingArea/container";
-import Column from "./sortingArea/column";
-import { mergeSort } from "./algorithm/merge";
+import { mergeSortAlgorithm } from "./algorithm/merge";
 import Orientation from "./sortingArea/orientation";
-import { AnimationData, SortingElement } from "./types";
-import { replaceItem } from "../../utility/array";
+import { AnimationData } from "./types";
+import ManagementPanel from "./managementPanel";
 
 const Sorting = () => {
   const [activeTab, setTab] = useState(0);
   const [data, setData] = useState(() => generateRandomData());
   const [currentOrientation, setOrientation] = useState(1);
-  const [lastSorted, setLastSorted] = useState<SortingElement[]>([]);
+  const [speed, setSpeed] = useState(10);
+  const [currentAnimation, setCurrentAnimation] = useState(0);
   const [inProgress, setInProgress] = useState(false);
   const [timeouts, setTimeouts] = useState<ReturnType<typeof setTimeout>[]>([]);
   const [animations, setAnimations] = useState<AnimationData[]>([]);
-
-  // console.log(
-  //   "-----data-------",
-  //   data.map((i) => i.value)
-  // );
 
   const handleAlgorithmChange = (
     event: React.SyntheticEvent,
@@ -45,6 +40,7 @@ const Sorting = () => {
   const handleReset = () => {
     setData(generateRandomData());
     setAnimations([]);
+    setCurrentAnimation(0);
     timeouts.forEach((i) => clearTimeout(i));
     setTimeouts([]);
     setInProgress(false);
@@ -52,62 +48,73 @@ const Sorting = () => {
 
   const handleSort = () => {
     setInProgress(true);
-    // setLastSorted(mergeSort(data, animations));
-    setData(mergeSort(data, animations));
-    // setAnimations([...animations]);
+    const animations: AnimationData[] = [];
+    mergeSortAlgorithm(data.slice(), animations);
+    setAnimations(animations);
+    runAnimations(animations);
   };
 
   const handleFinish = () => {
+    setCurrentAnimation(0);
     setAnimations([]);
     setTimeouts([]);
     setInProgress(false);
-    setData(lastSorted)
   };
 
   const handleStop = () => {
-    // setAnimations([]);
     timeouts.forEach((i) => clearTimeout(i));
     setTimeouts([]);
     setInProgress(false);
+    // setAnimations(animations.slice(currentAnimation));
   };
 
-  useEffect(() => {
+  const handleResume = () => {
+    runAnimations(animations.slice(currentAnimation));
+    setInProgress(true);
+  };
+
+  const onSpeedChangeCommit = () => {
+    timeouts.forEach((i) => clearTimeout(i));
+    const leftAnimations = animations.slice(currentAnimation);
+    setAnimations(leftAnimations);
+    inProgress && runAnimations(leftAnimations);
+  };
+
+  const onSpeedChange = (
+    event: Event | SyntheticEvent<Element, Event>,
+    newValue: number | number[]
+  ): void => {
+    setSpeed(newValue as number);
+  };
+
+  const runAnimations = (animations: AnimationData[]) => {
     if (animations.length) {
-      console.log("animations", animations);
       const timeouts: ReturnType<typeof setTimeout>[] = [];
 
       for (let i = 0; i <= animations.length; i++) {
         const time: ReturnType<typeof setTimeout> = setTimeout(() => {
+          setCurrentAnimation(i);
           setData((prevData) => {
             let newData = prevData.map((i) => ({ ...i, isComparing: false }));
             if (animations[i]) {
-              const leftIndex = newData
-                .map((i) => i.index)
-                .indexOf(animations[i].left!.index);
-              const rightIndex = newData
-                .map((i) => i.index)
-                .indexOf(animations[i].right!.index);
-              const left = newData[leftIndex];
-              const right = newData[rightIndex];
-              left.isComparing = true;
-              right.isComparing = true;
-              newData[leftIndex] = right
-              newData[rightIndex] = left
+              newData[animations[i].index].value = animations[i].value;
+              newData[animations[i].firstCompare].isComparing = true;
+              newData[animations[i].secondCompare].isComparing = true;
             } else {
               handleFinish();
             }
-            return [...newData];
+            return newData;
           });
-        }, i * 10);
+        }, i * speed);
         timeouts.push(time);
       }
       setTimeouts(timeouts);
     }
-  }, [animations]);
+  };
 
   return (
     <Paper className={styles.container}>
-      <Typography paddingBottom={2} variant="h6" component="div">
+      <Typography paddingBottom={1} paddingTop={1} variant="h6" component="div">
         Визуализация алгоритмов сортировки
       </Typography>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -117,7 +124,7 @@ const Sorting = () => {
               key={i}
               sx={{ flexGrow: 1 }}
               label={tab.label}
-              {...allyProps(i)}
+              {...a11yProps(i)}
             />
           ))}
         </Tabs>
@@ -133,23 +140,17 @@ const Sorting = () => {
           </div>
         </TabContent>
       ))}
-      <Box sx={{ paddingTop: 2, borderTop: 1, borderColor: "divider" }}>
-        <ButtonGroup>
-          <Button
-            variant="contained"
-            onClick={handleSort}
-            disabled={inProgress}
-          >
-            Запустить
-          </Button>
-          <Button variant="outlined" onClick={handleStop} disabled={false}>
-            Стоп
-          </Button>
-          <Button variant="outlined" onClick={handleReset} disabled={false}>
-            Сбросить
-          </Button>
-        </ButtonGroup>
-      </Box>
+      <ManagementPanel
+        onSpeedChangeCommit={onSpeedChangeCommit}
+        onSpeedChange={onSpeedChange}
+        speed={speed}
+        handleSort={handleSort}
+        currentAnimation={currentAnimation}
+        handleResume={handleResume}
+        handleStop={handleStop}
+        handleReset={handleReset}
+        inProgress={inProgress}
+      />
     </Paper>
   );
 };

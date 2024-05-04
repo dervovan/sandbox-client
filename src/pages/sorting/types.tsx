@@ -1,7 +1,7 @@
 export type SortingElement = {
-  index: number;
+  index?: number;
   value: number;
-  isComparing: boolean;
+  isComparing?: boolean;
 };
 
 export const SortingOrientation: Record<number, string> = {
@@ -11,7 +11,8 @@ export const SortingOrientation: Record<number, string> = {
 };
 
 export type AnimationData = {
-  left: SortingElement | null;
-  right: SortingElement | null;
-  isSwapped?: boolean;
+  index: number,
+  value: number,
+  firstCompare: number,
+  secondCompare: number
 };

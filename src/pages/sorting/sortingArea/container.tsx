@@ -16,9 +16,9 @@ const SortingContainer: React.FC<Props> = ({ data, orientation }) => {
         styles[SortingOrientation[orientation]]
       )}
     >
-      {data.map((i) => (
+      {data.map((i, index) => (
         <Column
-          key={i.index}
+          key={index}
           index={i.index}
           height={i.value}
           isComparing={i.isComparing}

@@ -3,8 +3,8 @@ import styles from "../index.module.scss";
 
 type Props = {
   height: number;
-  index: number;
-  isComparing: boolean;
+  index?: number;
+  isComparing?: boolean;
 };
 
 const Column: React.FC<Props> = ({ height, isComparing }) => {

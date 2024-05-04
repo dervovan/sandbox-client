@@ -24,7 +24,7 @@ $boardSize: 490px;
 
 .sortingArea {
   display: grid;
-  grid-template-columns: repeat(250, 1fr);
+  grid-template-columns: repeat(200, 1fr);
   gap: 2px;
   transform: scale(0.95);
   height: 400px;

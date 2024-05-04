@@ -1,71 +1,76 @@
 import { AnimationData, SortingElement } from "../types";
 
-function merge(
-  left: SortingElement[],
-  right: SortingElement[],
-  iterations: AnimationData[]
-): SortingElement[] {
-  const result = [];
-  const currentAll = [...left, ...right];
-
-  console.log(
-    "left-right",
-    left.map((i) => i.value),
-    right.map((i) => i.value)
-  );
-  console.log("+left-right+", left, right);
-
-  while (currentAll.length) {
-    const currentValues = currentAll.map((i: SortingElement) => i.value);
-    const maxValueIndex = currentValues.lastIndexOf(Math.max(...currentValues));
-
-    const leftAnimationItem = { ...currentAll[maxValueIndex] };
-    const rightAnimationItem = { ...currentAll[currentAll.length - 1] };
-
-    const animationItem: AnimationData | null =
-      leftAnimationItem.index !== rightAnimationItem.index
-        ? {
-            left: leftAnimationItem,
-            right: rightAnimationItem,
-            isSwapped: true,
-          }
-        : null;
-
-    currentAll[maxValueIndex] = { ...rightAnimationItem };
-    currentAll.pop();
-
-    animationItem && iterations.push(animationItem);
-  }
-
-  while (left.length && right.length) {
-    const leftItem = left[left.length - 1];
-    const rightItem = right[right.length - 1];
-    if (leftItem.value > rightItem.value) {
-      result.push(left.pop()!);
-    } else {
-      result.push(right.pop()!);
-    }
-  }
-  // подумать как избавиться от reverse, 
-  return [...left, ...right, ...result.reverse()];
-}
+export const mergeSortAlgorithm = (
+  arr: SortingElement[],
+  animations: AnimationData[]
+) => {
+  const copy = arr.slice();
+  mergeSort(arr, copy, 0, arr.length - 1, animations);
+};
 
 export function mergeSort(
   arr: SortingElement[],
+  copyArr: SortingElement[],
+  startIndex: number,
+  endIndex: number,
   iterations: AnimationData[]
-): SortingElement[] {
-  if (arr.length < 2) {
-    return arr;
+) {
+  if (startIndex >= endIndex) {
+    return;
   }
 
-  const left = arr.slice(0, arr.length / 2);
-  const right = arr.slice(arr.length / 2);
+  const middleIndex = Math.floor((startIndex + endIndex) / 2);
+  mergeSort(copyArr, arr, startIndex, middleIndex, iterations);
+  mergeSort(copyArr, arr, middleIndex + 1, endIndex, iterations);
 
-  const result = merge(
-    mergeSort(left, iterations),
-    mergeSort(right, iterations),
-    iterations
-  );
+  let r = startIndex,
+    i = startIndex,
+    j = middleIndex + 1;
+  while (i <= middleIndex && j <= endIndex) {
+    if (arr[i].value <= arr[j].value) {
+      copyArr[r] = arr[i];
+      iterations.push({
+        index: r,
+        firstCompare: i,
+        secondCompare: j,
+        value: copyArr[r].value,
+      });
+      r++;
+      i++;
+    } else {
+      copyArr[r] = arr[j];
+      iterations.push({
+        index: r,
+        firstCompare: i,
+        secondCompare: j,
+        value: copyArr[r].value,
+      });
+      r++;
+      j++;
+    }
+  }
 
-  return result;
+  while (i <= middleIndex) {
+    copyArr[r] = arr[i];
+    iterations.push({
+      index: r,
+      firstCompare: i,
+      secondCompare: i,
+      value: copyArr[r].value,
+    });
+    r++;
+    i++;
+  }
+
+  while (j <= endIndex) {
+    copyArr[r] = arr[j];
+    iterations.push({
+      index: r,
+      firstCompare: j,
+      secondCompare: j,
+      value: copyArr[r].value,
+    });
+    r++;
+    j++;
+  }
 }
