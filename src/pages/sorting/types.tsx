@@ -11,8 +11,9 @@ export const SortingOrientation: Record<number, string> = {
 };
 
 export type AnimationData = {
-  index: number,
-  value: number,
-  firstCompare: number,
-  secondCompare: number
+  index: number;
+  value?: number;
+  secondValue?: number;
+  firstCompare: number;
+  secondCompare: number;
 };

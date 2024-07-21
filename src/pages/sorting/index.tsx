@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -7,10 +7,11 @@ import TabContent, { a11yProps } from "../../components/uikit/tabs/tabContent";
 import { Paper, Typography } from "@mui/material";
 import { generateRandomData } from "./utility";
 import SortingContainer from "./sortingArea/container";
-import { mergeSortAlgorithm } from "./algorithm/merge";
+import { mergeSortAlgorithm, mergeSortAnimations } from "./algorithm/merge";
 import Orientation from "./sortingArea/orientation";
 import { AnimationData } from "./types";
 import ManagementPanel from "./managementPanel";
+import { quickSortAlgorithm, quickSortAnimations } from "./algorithm/quick";
 
 const Sorting = () => {
   const [activeTab, setTab] = useState(0);
@@ -19,8 +20,10 @@ const Sorting = () => {
   const [speed, setSpeed] = useState(10);
   const [currentAnimation, setCurrentAnimation] = useState(0);
   const [inProgress, setInProgress] = useState(false);
+  const [timespan, setTimespan] = useState(0);
   const [timeouts, setTimeouts] = useState<ReturnType<typeof setTimeout>[]>([]);
   const [animations, setAnimations] = useState<AnimationData[]>([]);
+  const sortTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const handleAlgorithmChange = (
     event: React.SyntheticEvent,
@@ -44,14 +47,28 @@ const Sorting = () => {
     timeouts.forEach((i) => clearTimeout(i));
     setTimeouts([]);
     setInProgress(false);
+    clearInterval(sortTimer.current);
+    setTimespan(0);
   };
 
   const handleSort = () => {
+    const sortStart = new Date();
     setInProgress(true);
+    const timer = setInterval(() => {
+      setTimespan(new Date().valueOf() - sortStart.valueOf());
+    }, 177);
+    sortTimer.current = timer;
     const animations: AnimationData[] = [];
-    mergeSortAlgorithm(data.slice(), animations);
+    tabs[activeTab].sortAlgorithm(data.slice(), animations);
     setAnimations(animations);
-    runAnimations(animations);
+    tabs[activeTab].runAnimations(
+      animations,
+      setCurrentAnimation,
+      setData,
+      handleFinish,
+      setTimeouts,
+      speed
+    );
   };
 
   const handleFinish = () => {
@@ -59,17 +76,25 @@ const Sorting = () => {
     setAnimations([]);
     setTimeouts([]);
     setInProgress(false);
+    clearInterval(sortTimer.current);
   };
 
   const handleStop = () => {
     timeouts.forEach((i) => clearTimeout(i));
     setTimeouts([]);
     setInProgress(false);
-    // setAnimations(animations.slice(currentAnimation));
   };
 
   const handleResume = () => {
-    runAnimations(animations.slice(currentAnimation));
+    tabs[activeTab].runAnimations(
+      animations.slice(currentAnimation),
+      setCurrentAnimation,
+      setData,
+      handleFinish,
+      setTimeouts,
+      speed
+    );
+
     setInProgress(true);
   };
 
@@ -77,7 +102,15 @@ const Sorting = () => {
     timeouts.forEach((i) => clearTimeout(i));
     const leftAnimations = animations.slice(currentAnimation);
     setAnimations(leftAnimations);
-    inProgress && runAnimations(leftAnimations);
+    inProgress &&
+      tabs[activeTab].runAnimations(
+        leftAnimations,
+        setCurrentAnimation,
+        setData,
+        handleFinish,
+        setTimeouts,
+        speed
+      );
   };
 
   const onSpeedChange = (
@@ -85,31 +118,6 @@ const Sorting = () => {
     newValue: number | number[]
   ): void => {
     setSpeed(newValue as number);
-  };
-
-  const runAnimations = (animations: AnimationData[]) => {
-    if (animations.length) {
-      const timeouts: ReturnType<typeof setTimeout>[] = [];
-
-      for (let i = 0; i <= animations.length; i++) {
-        const time: ReturnType<typeof setTimeout> = setTimeout(() => {
-          setCurrentAnimation(i);
-          setData((prevData) => {
-            let newData = prevData.map((i) => ({ ...i, isComparing: false }));
-            if (animations[i]) {
-              newData[animations[i].index].value = animations[i].value;
-              newData[animations[i].firstCompare].isComparing = true;
-              newData[animations[i].secondCompare].isComparing = true;
-            } else {
-              handleFinish();
-            }
-            return newData;
-          });
-        }, i * speed);
-        timeouts.push(time);
-      }
-      setTimeouts(timeouts);
-    }
   };
 
   return (
@@ -150,6 +158,7 @@ const Sorting = () => {
         handleStop={handleStop}
         handleReset={handleReset}
         inProgress={inProgress}
+        timespan={timespan}
       />
     </Paper>
   );
@@ -158,10 +167,14 @@ const Sorting = () => {
 export default Sorting;
 
 const tabs = [
-  { label: "Merge" },
-  { label: "Insertion" },
-  { label: "Selection" },
-  { label: "Bubble" },
-  { label: "Heap" },
-  { label: "Quick" },
+  {
+    label: "Quick",
+    sortAlgorithm: quickSortAlgorithm,
+    runAnimations: quickSortAnimations,
+  },
+  {
+    label: "Merge",
+    sortAlgorithm: mergeSortAlgorithm,
+    runAnimations: mergeSortAnimations,
+  },
 ];

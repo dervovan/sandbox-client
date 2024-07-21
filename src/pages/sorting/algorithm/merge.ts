@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { AnimationData, SortingElement } from "../types";
 
 export const mergeSortAlgorithm = (
@@ -74,3 +75,35 @@ export function mergeSort(
     j++;
   }
 }
+
+export const mergeSortAnimations = (
+  animations: AnimationData[],
+  setCurrentAnimation: (index: number) => void,
+  setData: Dispatch<SetStateAction<SortingElement[]>>,
+  handleFinish: () => void,
+  setTimeouts: (arg0: ReturnType<typeof setTimeout>[]) => void,
+  speed: number
+) => {
+  if (animations.length) {
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+
+    for (let i = 0; i <= animations.length; i++) {
+      const time: ReturnType<typeof setTimeout> = setTimeout(() => {
+        setCurrentAnimation(i);
+        setData((prevData: SortingElement[]) => {
+          let newData = prevData.map((i: any) => ({ ...i, isComparing: false }));
+          if (animations[i]) {
+            newData[animations[i].index!].value = animations[i].value;
+            newData[animations[i].firstCompare!].isComparing = true;
+            newData[animations[i].secondCompare].isComparing = true;
+          } else {
+            handleFinish();
+          }
+          return newData;
+        });
+      }, i * speed);
+      timeouts.push(time);
+    }
+    setTimeouts(timeouts);
+  }
+};
