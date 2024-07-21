@@ -1,6 +1,5 @@
 import { onMouseOver } from "./board";
 import Cell from "./cell";
-import styles from "./index.module.scss";
 import { CellState } from "./types";
 
 type Props = {

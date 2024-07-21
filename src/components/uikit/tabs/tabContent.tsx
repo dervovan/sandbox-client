@@ -1,9 +1,8 @@
-import React from "react";
 
-export function allyProps(index: number) {
+export function a11yProps(index: number) {
   return {
     id: `tab-${index}`,
-    'aria-controls': `tabpanel-${index}`,
+    "aria-controls": `tabpanel-${index}`,
   };
 }
 

@@ -30,7 +30,7 @@ const useRipple = () => {
   };
 
   const onMouseClick: onMouseOver = useCallback(
-    ({ cellIndex, rowIndex }): void => {
+    ({ cellIndex, rowIndex }): void => {     
       processRipple({ cellIndex, rowIndex });
     },
     []

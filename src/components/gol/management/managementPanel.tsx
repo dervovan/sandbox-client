@@ -1,7 +1,7 @@
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import TabContent, { allyProps } from "../../uikit/tabs/tabContent";
+import TabContent, { a11yProps } from "../../uikit/tabs/tabContent";
 import { Dispatch, SetStateAction } from "react";
 import { Typography } from "@mui/material";
 import GolManagement from "./golManagement";
@@ -15,7 +15,7 @@ interface TabPanelProps {
   resetGol: () => void;
   damp: () => void;
   uploadFromFile: (data: string) => void;
-  setFigure: (type: FigureType) => void
+  setFigure: (type: FigureType) => void;
 }
 
 const ManagementPanel = ({
@@ -26,7 +26,7 @@ const ManagementPanel = ({
   resetGol,
   damp,
   uploadFromFile,
-  setFigure
+  setFigure,
 }: TabPanelProps) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -36,8 +36,8 @@ const ManagementPanel = ({
     <div>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={activeTab} onChange={handleChange}>
-          <Tab sx={{ flexGrow: 1 }} label="Игра Жизнь" {...allyProps(0)} />
-          <Tab sx={{ flexGrow: 1 }} label="Круги на воде" {...allyProps(1)} />
+          <Tab sx={{ flexGrow: 1 }} label="Игра Жизнь" {...a11yProps(0)} />
+          <Tab sx={{ flexGrow: 1 }} label="Круги на воде" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabContent value={activeTab} index={0}>
